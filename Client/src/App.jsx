@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import  Login  from './components/Login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     const userJson = window.localStorage.getItem('blogAppUser')
@@ -19,9 +23,18 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll()
+    .then(blogs =>
       setBlogs( blogs )
-    )  
+    )
+    .catch(e => {
+      console.log(e.message)
+      if (e.response.status === 401) {
+        window.localStorage.removeItem('blogAppUser')
+        setUser(null)
+      }
+    })
+    
   }, [])
 
   const handleLogin = async (e) => {
@@ -46,30 +59,35 @@ const App = () => {
     blogService.setToken(null)
   }
 
+  const handleCreate = async (e) => {
+    e.preventDefault()
+    try {
+      const newObject = {
+        title,
+        author,
+        url
+      }
+
+      const response = await blogService.create(newObject)
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+      setBlogs((prev) => prev.concat(response))
+
+    } catch (e) {
+      alert("Algo a salido mal al enviar el blog")
+      console.log(e.response.status)
+    }
+  }
+
   if (user === null) {
     return (
-      <div>
-        <h2>Log In</h2>
-        <form onSubmit={handleLogin} >
-          <div>
-            Username 
-            <input type="text"
-                   value={username}
-                   name='Username'
-                   onChange={({target}) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            Password 
-            <input type="text"
-                   value={password}
-                   name='Password'
-                   onChange={({target}) => setPassword(target.value)}
-            />
-          </div>
-          <button type='submit'>login</button>
-        </form>
-      </div>
+      <Login  handleLogin={handleLogin} 
+              username={username} 
+              setUsername={setUsername} 
+              password={password} 
+              setPassword={setPassword}
+      />
     )
   }
 
@@ -80,6 +98,38 @@ const App = () => {
       <div><h2>
         {user.name} is Logged in
         </h2></div>
+        <h2>
+          Create New Blog
+        </h2>
+        <div>
+          <form onSubmit={handleCreate}>
+            <div>
+              Title
+              <input type="text" 
+                     value={title}
+                     name="Title"
+                     onChange={({target}) => setTitle(target.value)}
+              />
+            </div>
+            <div>
+              Author
+              <input type="text" 
+                     value={author}
+                     name="Author"
+                     onChange={({target}) => setAuthor(target.value)}              
+              />
+            </div>
+            <div>
+              Url
+              <input type="text" 
+                     value={url}
+                     name="Url"
+                     onChange={({target}) => setUrl(target.value)}
+              />
+            </div>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -95,4 +145,4 @@ const App = () => {
   )
 }
 
-export default App
+  export default App
