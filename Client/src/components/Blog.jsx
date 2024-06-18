@@ -26,7 +26,9 @@ const Blog = ({ blog, setBlogs }) => {
     console.log(response)
 
     setBlogs((prev) => {
-      return prev.map((b) => (b.id === blog.id ? response : b))
+      return prev
+        .map((b) => (b.id === blog.id ? response : b))
+        .toSorted((a, b) => b.likes - a.likes)
     })
   }
 

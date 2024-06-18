@@ -29,7 +29,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then((blogs) => setBlogs(blogs))
+      .then((blogs) => setBlogs(blogs.toSorted((a, b) => b.likes - a.likes)))
       .catch((e) => {
         console.log(e.message)
         if (e.response.status === 401) {
