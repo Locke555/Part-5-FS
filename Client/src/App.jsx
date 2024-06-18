@@ -127,7 +127,7 @@ const App = () => {
           <CreateForm handleCreate={handleCreate} ref={formRef} />
         </div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
         ))}
       </div>
       <div>

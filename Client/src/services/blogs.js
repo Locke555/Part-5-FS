@@ -36,4 +36,18 @@ const create = async (newObject) => {
   }
 }
 
-export default { getAll, setToken, create }
+const edit = async (newObject, id) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+  try {
+    const request = await axios.put(`${baseUrl}/${id}`, newObject, config)
+    return request.data
+  } catch (e) {
+    throw e
+  }
+}
+
+export default { getAll, setToken, create, edit }
