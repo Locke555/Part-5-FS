@@ -50,4 +50,17 @@ const edit = async (newObject, id) => {
   }
 }
 
-export default { getAll, setToken, create, edit }
+const remove = async (id) => {
+  const config = {
+    headers: {
+      Authorization: token
+    }
+  }
+  try {
+    const request = await axios.delete(`${baseUrl}/${id}`, config)
+  } catch (e) {
+    throw e
+  }
+}
+
+export default { getAll, setToken, create, edit, remove }

@@ -49,6 +49,8 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      const blogs = await blogService.getAll()
+      setBlogs(blogs.toSorted((a, b) => b.likes - a.likes))
     } catch (exception) {
       setNotification((prev) => ({
         message: 'Wrong Username or Password',
@@ -127,7 +129,13 @@ const App = () => {
           <CreateForm handleCreate={handleCreate} ref={formRef} />
         </div>
         {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
+          <Blog
+            key={blog.id}
+            blog={blog}
+            setBlogs={setBlogs}
+            user={user}
+            setNotification={setNotification}
+          />
         ))}
       </div>
       <div>
