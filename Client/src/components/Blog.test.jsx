@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
-import { expect, test, describe, beforeEach } from 'vitest'
+import { expect, test, describe, beforeEach, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
 let blog = {
@@ -28,7 +28,7 @@ describe('Blog Component Tests', () => {
     expect(element.id).toBe('nonExpandedBlog')
   })
 
-  test.only('The component can expand corretly', async () => {
+  test('The component can expand corretly', async () => {
     const { container } = render(
       <Blog blog={blog} setBlogs={null} user={null} setNotification={null} />
     )
@@ -41,5 +41,29 @@ describe('Blog Component Tests', () => {
 
     expect(element).toBeDefined()
     expect(element.id).toBe('expandedBlog')
+  })
+
+  test('The component can add a like corretly', async () => {
+    const mockHandler = vi.fn()
+
+    render(
+      <Blog
+        blog={blog}
+        setBlogs={null}
+        user={null}
+        setNotification={null}
+        addLike={mockHandler}
+      />
+    )
+
+    const user = userEvent.setup()
+    const expandButton = screen.getByTestId('expandButton')
+    await user.click(expandButton)
+    const button = screen.getByTestId('likeButton')
+
+    await user.click(button)
+    await user.click(button)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

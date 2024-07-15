@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, setBlogs, user, setNotification }) => {
+const Blog = ({ blog, setBlogs, user, setNotification, addLike }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,23 +13,6 @@ const Blog = ({ blog, setBlogs, user, setNotification }) => {
 
   const ToggleExpand = () => {
     setExpanded(!isExpanded)
-  }
-
-  const addLike = async () => {
-    const newState = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-
-    const response = await blogService.edit(newState, blog.id)
-
-    console.log(response)
-
-    setBlogs((prev) => {
-      return prev
-        .map((b) => (b.id === blog.id ? response : b))
-        .toSorted((a, b) => b.likes - a.likes)
-    })
   }
 
   const deleteBlog = async () => {
@@ -60,7 +43,9 @@ const Blog = ({ blog, setBlogs, user, setNotification }) => {
       <div style={blogStyle} id="nonExpandedBlog">
         {blog.title} {blog.user.name}
         <div>
-          <button onClick={ToggleExpand}>View</button>
+          <button onClick={ToggleExpand} data-testid="expandButton">
+            View
+          </button>
         </div>
       </div>
     )
@@ -68,7 +53,15 @@ const Blog = ({ blog, setBlogs, user, setNotification }) => {
     return (
       <div style={blogStyle} id="expandedBlog">
         {blog.title} <br /> {blog.user.name} <br /> {blog.likes}
-        <button onClick={addLike}>Like</button> <br /> {blog.url}
+        <button
+          onClick={() => {
+            addLike(blog)
+          }}
+          data-testid="likeButton"
+        >
+          Like
+        </button>{' '}
+        <br /> {blog.url}
         <div>
           <button onClick={ToggleExpand}>Close</button>
           <button onClick={deleteBlog}>Delete</button>

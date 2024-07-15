@@ -98,6 +98,23 @@ const App = () => {
     }
   }
 
+  const addLike = async (blogState) => {
+    const newState = {
+      ...blogState,
+      likes: blogState.likes + 1,
+    }
+
+    const response = await blogService.edit(newState, blogState.id)
+
+    console.log(response)
+
+    setBlogs((prev) => {
+      return prev
+        .map((b) => (b.id === blogState.id ? response : b))
+        .toSorted((a, b) => b.likes - a.likes)
+    })
+  }
+
   if (user === null) {
     return (
       <Login
@@ -135,6 +152,7 @@ const App = () => {
             setBlogs={setBlogs}
             user={user}
             setNotification={setNotification}
+            addLike={addLike}
           />
         ))}
       </div>
