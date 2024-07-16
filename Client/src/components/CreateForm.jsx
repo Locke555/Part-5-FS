@@ -31,7 +31,9 @@ const CreateForm = forwardRef(({ handleCreate }, refs) => {
   return (
     <>
       <div style={hideWhenVisible}>
-        <button onClick={ToggleVisibility}>Create Note</button>
+        <button onClick={ToggleVisibility} data-testid="expandButton">
+          Create Note
+        </button>
       </div>
       <div style={showWhenVisible}>
         <form onSubmit={newNote}>
@@ -42,6 +44,7 @@ const CreateForm = forwardRef(({ handleCreate }, refs) => {
               value={title}
               name="Title"
               onChange={({ target }) => setTitle(target.value)}
+              data-testid="titleInput"
             />
           </div>
           <div>
@@ -51,6 +54,7 @@ const CreateForm = forwardRef(({ handleCreate }, refs) => {
               value={author}
               name="Author"
               onChange={({ target }) => setAuthor(target.value)}
+              data-testid="authorInput"
             />
           </div>
           <div>
@@ -60,9 +64,12 @@ const CreateForm = forwardRef(({ handleCreate }, refs) => {
               value={url}
               name="Url"
               onChange={({ target }) => setUrl(target.value)}
+              data-testid="urlInput"
             />
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit" data-testid="submitInput">
+            Submit
+          </button>
         </form>
         <button onClick={ToggleVisibility}>Cancel</button>
       </div>
