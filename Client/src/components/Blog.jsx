@@ -41,7 +41,7 @@ const Blog = ({ blog, setBlogs, user, setNotification, addLike }) => {
   if (isExpanded == false) {
     return (
       <div style={blogStyle} id="nonExpandedBlog">
-        {blog.title} {blog.user.name}
+        <div>{blog.title}</div> {blog.user.name}
         <div>
           <button onClick={ToggleExpand} data-testid="expandButton">
             View
