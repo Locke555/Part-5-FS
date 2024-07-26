@@ -65,7 +65,7 @@ describe('Blog App', () => {
         await loginButton.click()
       })
 
-      test.only('a new blog can be created', async ({page}) => {
+      test('a new blog can be created', async ({page}) => {
         const titleInput = await page.getByTestId('titleInput')
         const authorInput = await page.getByTestId('authorInput')
         const urlInput = await page.getByTestId('urlInput')
@@ -76,11 +76,41 @@ describe('Blog App', () => {
         await titleInput.fill('rust is awesome')
         await authorInput.fill('rustecean')
         await urlInput.fill('www.rust.com')
+        await submitButton.click()
 
         const blog = await page.getByText('rust is awesome')
         await expect(blog).toBeDefined()
 
 
       })
+
+      describe('... and a blog exist', () => {
+        beforeEach(async ({page}) => {
+        const titleInput = await page.getByTestId('titleInput')
+        const authorInput = await page.getByTestId('authorInput')
+        const urlInput = await page.getByTestId('urlInput')
+        const submitButton = await page.getByRole('button', {name: 'Submit'})
+        const expandButton = await page.getByTestId('expandButton')
+
+        await expandButton.click()
+        await titleInput.fill('rust is awesome')
+        await authorInput.fill('rustecean')
+        await urlInput.fill('www.rust.com')
+        await submitButton.click()
+        })
+
+        test.only('the blog can be liked', async ({page}) => {
+          const expandButon = await page.getByRole('button', {name: 'View'})
+          await expandButon.click()
+
+          const likeButton = await page.getByTestId('likeButton')
+          await likeButton.click()
+
+          const likes = await page.getByTestId('likes')
+          await expect(likes).toContainText('1')
+        })
+        
+      })
+
     })
 })

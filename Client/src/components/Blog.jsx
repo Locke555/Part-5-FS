@@ -52,7 +52,7 @@ const Blog = ({ blog, setBlogs, user, setNotification, addLike }) => {
   } else {
     return (
       <div style={blogStyle} id="expandedBlog">
-        {blog.title} <br /> {blog.user.name} <br /> {blog.likes}
+        {blog.title} <br /> {blog.user.name} <br /> <div data-testid="likes">{blog.likes}</div>
         <button
           onClick={() => {
             addLike(blog)
