@@ -64,7 +64,7 @@ const Blog = ({ blog, setBlogs, user, setNotification, addLike }) => {
         <br /> {blog.url}
         <div>
           <button onClick={ToggleExpand}>Close</button>
-          <button onClick={deleteBlog}>Delete</button>
+          {user.username === blog.user.username ? <button id="deleteButton" onClick={deleteBlog}>Delete</button> : null}
         </div>
       </div>
     )

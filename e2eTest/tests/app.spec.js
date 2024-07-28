@@ -111,7 +111,7 @@ describe('Blog App', () => {
           await expect(likes).toContainText('1')
         })
         
-        test.only('The user who created the blog can erase the blog', async ({page}) => {
+        test('The user who created the blog can erase the blog', async ({page}) => {
           page.on('dialog', (dialog) => dialog.accept())
 
           const expandButon = await page.getByRole('button', {name: 'View'}) 
@@ -123,6 +123,36 @@ describe('Blog App', () => {
           const blogs = await page.locator("#nonExpandedBlog")
 
           await expect(blogs).toHaveCount(0)
+        })
+
+        describe('... and logged in with another user', () => {
+          beforeEach(async ({page, request}) => {
+            await request.post('http://localhost:3001/api/users', {
+              data: {
+                name: 'test',
+                username: 'test',
+                password: '123456'
+              }
+            })
+
+            await page.getByRole('button', {name: 'Log Out'}).click()
+
+            const usernameInput = await page.getByTestId('usernameInput')
+            const passwordInput = await page.getByTestId('passwordInput')
+            const loginButton = await page.getByRole('button', {name: 'login'})
+
+            await usernameInput.fill('test')
+            await passwordInput.fill('123456')
+            await loginButton.click()
+          })
+
+          test.only('The other user cant see the delete button', async ({page}) => {
+            await page.getByRole('button', {name: 'View'}).click()
+
+            const results = page.locator('#deleteButton')
+            await expect(results).toHaveCount(0)
+
+          })
         })
 
       })
