@@ -1,4 +1,5 @@
 const {test, expect, describe, beforeEach} = require('@playwright/test')
+const { assert } = require('console')
 
 describe('Blog App', () => {
     beforeEach(async ({ page, request }) => {
@@ -99,7 +100,7 @@ describe('Blog App', () => {
         await submitButton.click()
         })
 
-        test.only('the blog can be liked', async ({page}) => {
+        test('the blog can be liked', async ({page}) => {
           const expandButon = await page.getByRole('button', {name: 'View'})
           await expandButon.click()
 
@@ -110,6 +111,20 @@ describe('Blog App', () => {
           await expect(likes).toContainText('1')
         })
         
+        test.only('The user who created the blog can erase the blog', async ({page}) => {
+          page.on('dialog', (dialog) => dialog.accept())
+
+          const expandButon = await page.getByRole('button', {name: 'View'}) 
+          await expandButon.click()
+
+          const deleteButton = await page.getByRole('button', {name: 'Delete'})
+          await deleteButton.click()
+
+          const blogs = await page.locator("#nonExpandedBlog")
+
+          await expect(blogs).toHaveCount(0)
+        })
+
       })
 
     })

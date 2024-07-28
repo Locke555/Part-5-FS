@@ -145,6 +145,7 @@ const App = () => {
         <div>
           <CreateForm handleCreate={handleCreate} ref={formRef} />
         </div>
+        <div data-testid="blogsContainer">
         {blogs.map((blog) => (
           <Blog
             key={blog.id}
@@ -155,6 +156,7 @@ const App = () => {
             addLike={addLike}
           />
         ))}
+        </div>
       </div>
       <div>
         <button onClick={handleLogOut}>Log Out</button>
